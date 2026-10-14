@@ -51,6 +51,13 @@ INSTALLED_APPS = [
     'apps.notifications',
     'apps.auditlog',
     'apps.common',
+    'apps.statutory_gst_engine',
+    'apps.wms_spatial_slotting',
+    'apps.supply_chain_planning',
+    'apps.mrp_manufacturing',
+    'apps.enterprise_accounting',
+    'apps.telemetry_iot_sensors',
+    'apps.automated_guided_vehicles',
 ]
 
 MIDDLEWARE = [
