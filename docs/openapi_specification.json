@@ -1,0 +1,239 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "StockPilot — Intelligent Warehouse Management System API",
+    "description": "Production REST API specification for StockPilot WMS, powering multi-warehouse logistics, procurement, demand forecasting, and statutory Indian compliance.",
+    "version": "2.4.0-enterprise",
+    "contact": {
+      "name": "StockPilot Engineering Team",
+      "email": "engineering@stockpilot.in"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8000/api",
+      "description": "Local Development Server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/health/": {
+      "get": {
+        "summary": "System Health Status",
+        "description": "Returns operational status of database, timezone, and application version.",
+        "responses": {
+          "200": { "description": "System operational" }
+        }
+      }
+    },
+    "/auth/login/": {
+      "post": {
+        "summary": "Authenticate User",
+        "description": "Verifies email and password; returns JWT access token and user profile.",
+        "responses": {
+          "200": { "description": "Authentication successful" },
+          "401": { "description": "Invalid credentials" }
+        }
+      }
+    },
+    "/auth/register/": {
+      "post": {
+        "summary": "Onboard Organization",
+        "description": "Registers new organization tenant, primary administrator, and initial settings.",
+        "responses": {
+          "201": { "description": "Organization created" }
+        }
+      }
+    },
+    "/auth/profile/": {
+      "get": {
+        "summary": "Current User Profile",
+        "responses": { "200": { "description": "Profile data retrieved" } }
+      },
+      "patch": {
+        "summary": "Update Theme / Profile",
+        "responses": { "200": { "description": "Updated profile" } }
+      }
+    },
+    "/auth/users/": {
+      "get": {
+        "summary": "List Authorized Staff Users",
+        "responses": { "200": { "description": "List of staff members" } }
+      },
+      "post": {
+        "summary": "Create Staff Account",
+        "responses": { "201": { "description": "Staff account created" } }
+      }
+    },
+    "/warehouses/": {
+      "get": {
+        "summary": "List Warehouses",
+        "responses": { "200": { "description": "Active warehouses" } }
+      },
+      "post": {
+        "summary": "Create Warehouse Hub",
+        "responses": { "201": { "description": "Warehouse created" } }
+      }
+    },
+    "/warehouses/{id}/": {
+      "get": {
+        "summary": "Warehouse Details with Utilization Metrics",
+        "responses": { "200": { "description": "Warehouse detail" } }
+      }
+    },
+    "/catalog/products/": {
+      "get": {
+        "summary": "List Products",
+        "responses": { "200": { "description": "Product catalog" } }
+      },
+      "post": {
+        "summary": "Create Product",
+        "responses": { "201": { "description": "Product created" } }
+      }
+    },
+    "/catalog/categories/": {
+      "get": {
+        "summary": "List Categories",
+        "responses": { "200": { "description": "Hierarchical category tree" } }
+      }
+    },
+    "/inventory/items/": {
+      "get": {
+        "summary": "List Stock Balances",
+        "responses": { "200": { "description": "Current on-hand, reserved, and available stock" } }
+      }
+    },
+    "/inventory/movements/": {
+      "get": {
+        "summary": "Auditable Stock Movement Ledger",
+        "responses": { "200": { "description": "Traceable double-entry ledger stream" } }
+      }
+    },
+    "/procurement/orders/": {
+      "get": {
+        "summary": "List Purchase Orders",
+        "responses": { "200": { "description": "Procurement orders list" } }
+      },
+      "post": {
+        "summary": "Create Purchase Order",
+        "responses": { "201": { "description": "Purchase order created" } }
+      }
+    },
+    "/procurement/orders/{id}/approve/": {
+      "post": {
+        "summary": "Approve Purchase Order",
+        "responses": { "200": { "description": "Approved" } }
+      }
+    },
+    "/procurement/orders/{id}/download_pdf/": {
+      "get": {
+        "summary": "Generate Local PDF Purchase Order",
+        "responses": { "200": { "description": "PDF binary stream" } }
+      }
+    },
+    "/procurement/receipts/": {
+      "post": {
+        "summary": "Create Goods Receipt Note (GRN)",
+        "responses": { "201": { "description": "GRN logged and inventory balance updated" } }
+      }
+    },
+    "/suppliers/": {
+      "get": {
+        "summary": "Supplier Directory",
+        "responses": { "200": { "description": "Vendors with GSTIN and performance metrics" } }
+      }
+    },
+    "/sales/orders/": {
+      "get": {
+        "summary": "List Sales Orders",
+        "responses": { "200": { "description": "Sales orders list" } }
+      },
+      "post": {
+        "summary": "Create Sales Order",
+        "responses": { "201": { "description": "Order created" } }
+      }
+    },
+    "/sales/orders/{id}/confirm/": {
+      "post": {
+        "summary": "Confirm & Reserve Stock (Atomic Lock)",
+        "responses": {
+          "200": { "description": "Stock reserved" },
+          "400": { "description": "Insufficient available inventory" }
+        }
+      }
+    },
+    "/dispatch/orders/": {
+      "get": {
+        "summary": "List Dispatch Orders",
+        "responses": { "200": { "description": "Active dispatches" } }
+      }
+    },
+    "/dispatch/orders/{id}/download_challan/": {
+      "get": {
+        "summary": "Generate Rule 55 Delivery Challan PDF",
+        "responses": { "200": { "description": "Rule 55 PDF document" } }
+      }
+    },
+    "/barcodes/lookup/": {
+      "get": {
+        "summary": "Barcode & QR Scanner Lookup",
+        "responses": { "200": { "description": "Matching SKU or location record" } }
+      }
+    },
+    "/audits/sessions/": {
+      "get": {
+        "summary": "Stocktaking Audit Sessions",
+        "responses": { "200": { "description": "Audit sessions" } }
+      }
+    },
+    "/forecasting/results/": {
+      "get": {
+        "summary": "AI Demand Forecast Results",
+        "responses": { "200": { "description": "Holt-Winters forecast projections" } }
+      }
+    },
+    "/forecasting/recommendations/": {
+      "get": {
+        "summary": "Reorder Recommendations",
+        "responses": { "200": { "description": "Actionable replenishment recommendations" } }
+      }
+    },
+    "/reports/list/": {
+      "get": {
+        "summary": "List 16 Standard Reports",
+        "responses": { "200": { "description": "Enterprise reports catalog" } }
+      }
+    },
+    "/reports/{report_id}/": {
+      "get": {
+        "summary": "Fetch Report Data or Stream CSV",
+        "responses": { "200": { "description": "Report table data or CSV download" } }
+      }
+    },
+    "/notifications/": {
+      "get": {
+        "summary": "Internal Notification Center",
+        "responses": { "200": { "description": "Alerts stream with severity tags" } }
+      }
+    },
+    "/auditlog/": {
+      "get": {
+        "summary": "Security Audit Trail Stream",
+        "responses": { "200": { "description": "Immutable security logs" } }
+      }
+    }
+  }
+}
