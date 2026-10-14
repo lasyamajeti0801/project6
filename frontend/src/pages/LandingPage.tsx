@@ -52,6 +52,7 @@ export const LandingPage: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [previewScreen, setPreviewScreen] = useState<'dashboard' | 'inventory' | 'forecasting' | 'dispatches'>('dashboard');
 
   // Demand & Sales Trend chart data matching the reference image (green bars + orange line)
   const trendData = [
@@ -258,32 +259,75 @@ export const LandingPage: React.FC = () => {
                   </span>
                 </div>
 
-                {/* Simulated Dashboard UI matching reference screenshot */}
+                {/* Simulated Dashboard UI with interactive screen switching */}
                 <div className="flex text-left">
-                  {/* Miniature Dark Green Sidebar */}
-                  <div className="w-28 bg-[#14532D] text-white p-2.5 space-y-2 text-[10px] font-medium hidden sm:block shrink-0">
+                  {/* Miniature Dark Green Sidebar with clickable screen tabs */}
+                  <div className="w-32 bg-[#14532D] text-white p-2.5 space-y-2 text-[10px] font-medium hidden sm:block shrink-0 select-none">
                     <div className="flex items-center gap-1 font-bold text-xs pb-2 border-b border-forest-700">
                       <Boxes className="w-3.5 h-3.5 text-accent-400" />
                       <span>StockPilot</span>
                     </div>
                     <div className="space-y-1">
-                      <div className="px-2 py-1 rounded bg-forest-700 font-bold flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-accent-400"></span> Dashboard
+                      <button
+                        type="button"
+                        onClick={() => setPreviewScreen('dashboard')}
+                        className={`w-full text-left px-2 py-1 rounded transition-colors flex items-center justify-between ${
+                          previewScreen === 'dashboard' ? 'bg-forest-700 font-bold' : 'opacity-70 hover:opacity-100 hover:bg-forest-800'
+                        }`}
+                      >
+                        <span className="flex items-center gap-1">
+                          <span className={`w-1.5 h-1.5 rounded-full ${previewScreen === 'dashboard' ? 'bg-accent-400' : 'bg-transparent'}`}></span>
+                          Dashboard
+                        </span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setPreviewScreen('inventory')}
+                        className={`w-full text-left px-2 py-1 rounded transition-colors flex items-center justify-between ${
+                          previewScreen === 'inventory' ? 'bg-forest-700 font-bold' : 'opacity-70 hover:opacity-100 hover:bg-forest-800'
+                        }`}
+                      >
+                        <span className="flex items-center gap-1">
+                          <span className={`w-1.5 h-1.5 rounded-full ${previewScreen === 'inventory' ? 'bg-accent-400' : 'bg-transparent'}`}></span>
+                          Inventory
+                        </span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setPreviewScreen('forecasting')}
+                        className={`w-full text-left px-2 py-1 rounded transition-colors flex items-center justify-between ${
+                          previewScreen === 'forecasting' ? 'bg-forest-700 font-bold' : 'opacity-70 hover:opacity-100 hover:bg-forest-800'
+                        }`}
+                      >
+                        <span className="flex items-center gap-1">
+                          <span className={`w-1.5 h-1.5 rounded-full ${previewScreen === 'forecasting' ? 'bg-accent-400' : 'bg-transparent'}`}></span>
+                          Forecasting
+                        </span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setPreviewScreen('dispatches')}
+                        className={`w-full text-left px-2 py-1 rounded transition-colors flex items-center justify-between ${
+                          previewScreen === 'dispatches' ? 'bg-forest-700 font-bold' : 'opacity-70 hover:opacity-100 hover:bg-forest-800'
+                        }`}
+                      >
+                        <span className="flex items-center gap-1">
+                          <span className={`w-1.5 h-1.5 rounded-full ${previewScreen === 'dispatches' ? 'bg-accent-400' : 'bg-transparent'}`}></span>
+                          Dispatches
+                        </span>
+                      </button>
+
+                      <div className="pt-1 border-t border-forest-700/60 text-[9px] opacity-60 px-2">
+                        Click tabs to test
                       </div>
-                      <div className="px-2 py-0.5 opacity-70 hover:opacity-100">Inventory</div>
-                      <div className="px-2 py-0.5 opacity-70 hover:opacity-100">Products</div>
-                      <div className="px-2 py-0.5 opacity-70 hover:opacity-100">Categories</div>
-                      <div className="px-2 py-0.5 opacity-70 hover:opacity-100">Warehouses</div>
-                      <div className="px-2 py-0.5 opacity-70 hover:opacity-100">Purchase Orders</div>
-                      <div className="px-2 py-0.5 opacity-70 hover:opacity-100">Sales Orders</div>
-                      <div className="px-2 py-0.5 opacity-70 hover:opacity-100">Dispatches</div>
-                      <div className="px-2 py-0.5 opacity-70 hover:opacity-100">Reports</div>
-                      <div className="px-2 py-0.5 opacity-70 hover:opacity-100">Settings</div>
                     </div>
                   </div>
 
                   {/* Main Preview Board */}
-                  <div className="flex-1 p-3.5 space-y-3 bg-[#FAFAF7] dark:bg-charcoal-900 overflow-hidden">
+                  <div className="flex-1 p-3.5 space-y-3 bg-[#FAFAF7] dark:bg-charcoal-900 overflow-hidden min-h-[290px]">
                     {/* Top Search & Profile Bar */}
                     <div className="flex items-center justify-between text-xs pb-2 border-b border-forest-100 dark:border-charcoal-800">
                       <div className="relative w-44">
@@ -292,7 +336,7 @@ export const LandingPage: React.FC = () => {
                           type="text"
                           readOnly
                           placeholder="Search products, orders..."
-                          className="w-full pl-6 pr-2 py-1 text-[10px] rounded border border-forest-200 bg-white text-charcoal"
+                          className="w-full pl-6 pr-2 py-1 text-[10px] rounded border border-forest-200 bg-white text-charcoal focus:outline-none"
                         />
                       </div>
                       <div className="flex items-center gap-2 text-[10px]">
@@ -303,85 +347,186 @@ export const LandingPage: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* 4 Mini KPI Cards */}
-                    <div className="grid grid-cols-4 gap-2 text-left">
-                      <div className="p-2 bg-white dark:bg-charcoal-800 rounded border border-forest-100 dark:border-charcoal-700">
-                        <span className="text-[9px] text-secondary block">Total Products</span>
-                        <div className="font-bold text-xs text-charcoal dark:text-white flex items-baseline gap-1">
-                          1,248 <span className="text-[8px] text-emerald-700 font-semibold">+12%</span>
-                        </div>
-                      </div>
-
-                      <div className="p-2 bg-white dark:bg-charcoal-800 rounded border border-forest-100 dark:border-charcoal-700">
-                        <span className="text-[9px] text-secondary block">Stock Value</span>
-                        <div className="font-bold text-xs text-forest-800 dark:text-accent-400 flex items-baseline gap-1">
-                          ₹24,56,800 <span className="text-[8px] text-emerald-700 font-semibold">+8%</span>
-                        </div>
-                      </div>
-
-                      <div className="p-2 bg-white dark:bg-charcoal-800 rounded border border-forest-100 dark:border-charcoal-700">
-                        <span className="text-[9px] text-amber-700 block">Low Stock</span>
-                        <div className="font-bold text-xs text-amber-700 flex items-baseline gap-1">
-                          12 <span className="text-[8px] text-amber-600 font-semibold">-2%</span>
-                        </div>
-                      </div>
-
-                      <div className="p-2 bg-white dark:bg-charcoal-800 rounded border border-forest-100 dark:border-charcoal-700">
-                        <span className="text-[9px] text-terracotta block">Pending POs</span>
-                        <div className="font-bold text-xs text-charcoal dark:text-white flex items-baseline gap-1">
-                          8 <span className="text-[8px] text-emerald-700 font-semibold">+2%</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Stock Overview Line Graph & Top Products Row */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left">
-                      {/* Mini Line Chart */}
-                      <div className="p-2 bg-white dark:bg-charcoal-800 rounded border border-forest-100 dark:border-charcoal-700">
-                        <div className="flex items-center justify-between text-[10px] font-bold text-charcoal dark:text-white mb-1">
-                          <span>Stock Overview</span>
-                          <span className="text-[8px] text-emerald-700 font-mono">Last 30 days</span>
-                        </div>
-                        <div className="h-24 w-full">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <ComposedChart data={trendData} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
-                              <CartesianGrid strokeDasharray="2 2" stroke="#E5E7EB" vertical={false} />
-                              <XAxis dataKey="date" tick={{ fontSize: 8 }} />
-                              <YAxis tick={{ fontSize: 8 }} />
-                              <Line type="monotone" dataKey="sales" stroke="#15803D" strokeWidth={2} dot={false} />
-                              <Line type="monotone" dataKey="forecast" stroke="#F59E0B" strokeWidth={1.5} dot={false} strokeDasharray="3 3" />
-                            </ComposedChart>
-                          </ResponsiveContainer>
-                        </div>
-                      </div>
-
-                      {/* Top Products Mini Table */}
-                      <div className="p-2 bg-white dark:bg-charcoal-800 rounded border border-forest-100 dark:border-charcoal-700 text-[10px]">
-                        <span className="font-bold text-charcoal dark:text-white block mb-1">Top Products</span>
-                        <div className="space-y-1">
-                          <div className="flex items-center justify-between border-b border-forest-50 pb-0.5">
-                            <span className="font-medium text-charcoal">Laptop Core i7</span>
-                            <span className="font-bold text-charcoal">45</span>
-                            <span className="text-[8px] font-bold text-emerald-800 bg-emerald-50 px-1 rounded">In Stock</span>
+                    {/* Dynamic Screen 1: Dashboard Overview (Exact Match with Image) */}
+                    {previewScreen === 'dashboard' && (
+                      <div className="space-y-3">
+                        {/* 4 Mini KPI Cards */}
+                        <div className="grid grid-cols-4 gap-2 text-left">
+                          <div className="p-2 bg-white dark:bg-charcoal-800 rounded border border-forest-100 dark:border-charcoal-700">
+                            <span className="text-[9px] text-secondary block">Total Products</span>
+                            <div className="font-bold text-xs text-charcoal dark:text-white flex items-baseline gap-1">
+                              1,248 <span className="text-[8px] text-emerald-700 font-semibold">+12%</span>
+                            </div>
                           </div>
-                          <div className="flex items-center justify-between border-b border-forest-50 pb-0.5">
-                            <span className="font-medium text-charcoal">Wireless Mouse</span>
-                            <span className="font-bold text-charcoal">129</span>
-                            <span className="text-[8px] font-bold text-emerald-800 bg-emerald-50 px-1 rounded">In Stock</span>
+
+                          <div className="p-2 bg-white dark:bg-charcoal-800 rounded border border-forest-100 dark:border-charcoal-700">
+                            <span className="text-[9px] text-secondary block">Stock Value</span>
+                            <div className="font-bold text-xs text-forest-800 dark:text-accent-400 flex items-baseline gap-1">
+                              ₹24,56,800 <span className="text-[8px] text-emerald-700 font-semibold">+8%</span>
+                            </div>
                           </div>
-                          <div className="flex items-center justify-between border-b border-forest-50 pb-0.5">
-                            <span className="font-medium text-charcoal">Mechanical Keyboard</span>
-                            <span className="font-bold text-charcoal">28</span>
-                            <span className="text-[8px] font-bold text-amber-800 bg-amber-50 px-1 rounded">Low Stock</span>
+
+                          <div className="p-2 bg-white dark:bg-charcoal-800 rounded border border-forest-100 dark:border-charcoal-700">
+                            <span className="text-[9px] text-amber-700 block">Low Stock</span>
+                            <div className="font-bold text-xs text-amber-700 flex items-baseline gap-1">
+                              12 <span className="text-[8px] text-amber-600 font-semibold">-2%</span>
+                            </div>
                           </div>
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium text-charcoal">USB-C Monitor 27"</span>
-                            <span className="font-bold text-charcoal">12</span>
-                            <span className="text-[8px] font-bold text-alert-700 bg-alert-50 px-1 rounded">Critical</span>
+
+                          <div className="p-2 bg-white dark:bg-charcoal-800 rounded border border-forest-100 dark:border-charcoal-700">
+                            <span className="text-[9px] text-terracotta block">Pending POs</span>
+                            <div className="font-bold text-xs text-charcoal dark:text-white flex items-baseline gap-1">
+                              8 <span className="text-[8px] text-emerald-700 font-semibold">+2%</span>
+                            </div>
                           </div>
                         </div>
+
+                        {/* Stock Overview Line Graph & Top Products Row */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left">
+                          {/* Mini Line Chart */}
+                          <div className="p-2 bg-white dark:bg-charcoal-800 rounded border border-forest-100 dark:border-charcoal-700">
+                            <div className="flex items-center justify-between text-[10px] font-bold text-charcoal dark:text-white mb-1">
+                              <span>Stock Overview</span>
+                              <span className="text-[8px] text-emerald-700 font-mono">Last 30 days</span>
+                            </div>
+                            <div className="h-24 w-full">
+                              <ResponsiveContainer width="100%" height="100%">
+                                <ComposedChart data={trendData} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
+                                  <CartesianGrid strokeDasharray="2 2" stroke="#E5E7EB" vertical={false} />
+                                  <XAxis dataKey="date" tick={{ fontSize: 8 }} />
+                                  <YAxis tick={{ fontSize: 8 }} />
+                                  <Line type="monotone" dataKey="sales" stroke="#15803D" strokeWidth={2} dot={false} />
+                                  <Line type="monotone" dataKey="forecast" stroke="#F59E0B" strokeWidth={1.5} dot={false} strokeDasharray="3 3" />
+                                </ComposedChart>
+                              </ResponsiveContainer>
+                            </div>
+                          </div>
+
+                          {/* Top Products Mini Table */}
+                          <div className="p-2 bg-white dark:bg-charcoal-800 rounded border border-forest-100 dark:border-charcoal-700 text-[10px]">
+                            <span className="font-bold text-charcoal dark:text-white block mb-1">Top Products</span>
+                            <div className="space-y-1">
+                              <div className="flex items-center justify-between border-b border-forest-50 pb-0.5">
+                                <span className="font-medium text-charcoal">Laptop Core i7</span>
+                                <span className="font-bold text-charcoal">45</span>
+                                <span className="text-[8px] font-bold text-emerald-800 bg-emerald-50 px-1 rounded">In Stock</span>
+                              </div>
+                              <div className="flex items-center justify-between border-b border-forest-50 pb-0.5">
+                                <span className="font-medium text-charcoal">Wireless Mouse</span>
+                                <span className="font-bold text-charcoal">129</span>
+                                <span className="text-[8px] font-bold text-emerald-800 bg-emerald-50 px-1 rounded">In Stock</span>
+                              </div>
+                              <div className="flex items-center justify-between border-b border-forest-50 pb-0.5">
+                                <span className="font-medium text-charcoal">Mechanical Keyboard</span>
+                                <span className="font-bold text-charcoal">28</span>
+                                <span className="text-[8px] font-bold text-amber-800 bg-amber-50 px-1 rounded">Low Stock</span>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span className="font-medium text-charcoal">USB-C Monitor 27"</span>
+                                <span className="font-bold text-charcoal">12</span>
+                                <span className="text-[8px] font-bold text-alert-700 bg-alert-50 px-1 rounded">Critical</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    )}
+
+                    {/* Dynamic Screen 2: Real-time Multi-Warehouse Inventory */}
+                    {previewScreen === 'inventory' && (
+                      <div className="space-y-2 text-left">
+                        <div className="flex items-center justify-between text-[11px] font-bold text-charcoal dark:text-white">
+                          <span>Multi-Warehouse Stock Ledger</span>
+                          <span className="text-[9px] text-emerald-700">3 Hubs Connected</span>
+                        </div>
+                        <div className="border border-forest-100 dark:border-charcoal-700 rounded bg-white dark:bg-charcoal-800 overflow-hidden text-[9px]">
+                          <table className="w-full text-left">
+                            <thead className="bg-forest-50 text-secondary uppercase font-semibold">
+                              <tr>
+                                <th className="p-1.5">SKU / Item</th>
+                                <th className="p-1.5">Warehouse</th>
+                                <th className="p-1.5 text-right">On Hand</th>
+                                <th className="p-1.5 text-right">Available</th>
+                                <th className="p-1.5 text-right">Status</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-forest-50">
+                              <tr>
+                                <td className="p-1.5 font-semibold">SKU-IND-001 (Laptop i7)</td>
+                                <td className="p-1.5 text-secondary">WH-BHW-01 (Bhiwandi)</td>
+                                <td className="p-1.5 text-right font-bold">140</td>
+                                <td className="p-1.5 text-right text-emerald-700 font-bold">128</td>
+                                <td className="p-1.5 text-right"><span className="text-[8px] bg-emerald-50 text-emerald-800 px-1 rounded font-bold">Optimal</span></td>
+                              </tr>
+                              <tr>
+                                <td className="p-1.5 font-semibold">SKU-IND-004 (Barcode Scanner)</td>
+                                <td className="p-1.5 text-secondary">WH-GGN-02 (Gurugram)</td>
+                                <td className="p-1.5 text-right font-bold">22</td>
+                                <td className="p-1.5 text-right text-amber-700 font-bold">18</td>
+                                <td className="p-1.5 text-right"><span className="text-[8px] bg-amber-50 text-amber-800 px-1 rounded font-bold">Reorder</span></td>
+                              </tr>
+                              <tr>
+                                <td className="p-1.5 font-semibold">SKU-IND-007 (Heavy Pallet)</td>
+                                <td className="p-1.5 text-secondary">WH-BLR-03 (Bengaluru)</td>
+                                <td className="p-1.5 text-right font-bold">450</td>
+                                <td className="p-1.5 text-right text-emerald-700 font-bold">410</td>
+                                <td className="p-1.5 text-right"><span className="text-[8px] bg-emerald-50 text-emerald-800 px-1 rounded font-bold">Healthy</span></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Dynamic Screen 3: AI Demand Forecasting */}
+                    {previewScreen === 'forecasting' && (
+                      <div className="space-y-2 text-left">
+                        <div className="flex items-center justify-between text-[11px] font-bold text-charcoal dark:text-white">
+                          <span>Holt-Winters Demand Forecast</span>
+                          <span className="text-[9px] text-emerald-800 font-bold">MAE: 1.42 • WAPE: 4.8%</span>
+                        </div>
+                        <div className="p-2.5 rounded bg-emerald-50/70 border border-emerald-200 text-[10px] space-y-1">
+                          <div className="flex justify-between font-bold text-emerald-950">
+                            <span>Recommended Replenishment: Wireless Mouse</span>
+                            <span className="text-emerald-800">+250 Units</span>
+                          </div>
+                          <p className="text-[9px] text-emerald-900 leading-tight">
+                            Lead Time: 7 Days • Safety Stock: 42 Units • Reorder Point: 112 Units.
+                          </p>
+                          <div className="pt-1 flex gap-2">
+                            <span className="text-[8px] bg-emerald-700 text-white px-2 py-0.5 rounded font-bold">
+                              Auto-Generate Draft PO #PO-2026-004
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Dynamic Screen 4: Dispatches & Rule 55 Challans */}
+                    {previewScreen === 'dispatches' && (
+                      <div className="space-y-2 text-left">
+                        <div className="flex items-center justify-between text-[11px] font-bold text-charcoal dark:text-white">
+                          <span>Active Dispatches &amp; Delivery Challans</span>
+                          <span className="text-[9px] text-emerald-800 font-semibold">CGST Rule 55 Compliant</span>
+                        </div>
+                        <div className="space-y-1.5 text-[10px]">
+                          <div className="p-2 bg-white dark:bg-charcoal-800 rounded border border-forest-100 flex items-center justify-between">
+                            <div>
+                              <span className="font-bold text-charcoal block">DC-2026-0081 • Delhivery Logistics</span>
+                              <span className="text-[9px] text-secondary">Vehicle: MH-04-AB-1234 • E-Way: 281928471928</span>
+                            </div>
+                            <span className="text-[8px] bg-emerald-50 text-emerald-800 font-bold px-1.5 py-0.5 rounded">In Transit</span>
+                          </div>
+                          <div className="p-2 bg-white dark:bg-charcoal-800 rounded border border-forest-100 flex items-center justify-between">
+                            <div>
+                              <span className="font-bold text-charcoal block">DC-2026-0082 • VRL Logistics</span>
+                              <span className="text-[9px] text-secondary">Vehicle: KA-01-EF-9876 • E-Way: 837192847192</span>
+                            </div>
+                            <span className="text-[8px] bg-amber-50 text-amber-800 font-bold px-1.5 py-0.5 rounded">Packing</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
