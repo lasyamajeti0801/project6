@@ -23,7 +23,6 @@ wheels/
 .installed.cfg
 *.egg
 *.zip
-!StockPilot_Submission_With_Git.zip
 
 # Django
 *.log
