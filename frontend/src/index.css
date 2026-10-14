@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #14532D;
+  --color-primary-dark: #0F3E22;
+  --color-primary-light: #15803D;
+  --color-accent: #22C55E;
+  --color-bg: #FAFAF7;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #FFFFFF;
+  --color-text: #1F2933;
+  --color-text-muted: #647067;
+  --color-border: #E5E7EB;
+  --color-sage: #E7F2E8;
+  --color-amber: #F59E0B;
+  --color-terracotta: #C65D3A;
+  --color-alert: #DC2626;
+}
+
+.theme-dark {
+  --color-primary: #22C55E;
+  --color-primary-dark: #15803D;
+  --color-primary-light: #4ADE80;
+  --color-accent: #22C55E;
+  --color-bg: #121820;
+  --color-surface: #1A222C;
+  --color-surface-elevated: #242E3B;
+  --color-text: #F1F5F9;
+  --color-text-muted: #94A3B8;
+  --color-border: #2D3A48;
+  --color-sage: #1E2E23;
+  --color-amber: #F59E0B;
+  --color-terracotta: #E07A5F;
+  --color-alert: #EF4444;
+}
+
+.theme-sage {
+  --color-primary: #1B4D2E;
+  --color-primary-dark: #133A22;
+  --color-primary-light: #2A6C42;
+  --color-accent: #34D399;
+  --color-bg: #F4F7F4;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #FFFFFF;
+  --color-text: #1E2922;
+  --color-text-muted: #56685B;
+  --color-border: #D6E2D8;
+  --color-sage: #E7F2E8;
+  --color-amber: #D97706;
+  --color-terracotta: #C65D3A;
+  --color-alert: #DC2626;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+
+.theme-dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Restrained animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+/* Focus styles strictly without blue */
+input:focus, select:focus, textarea:focus, button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(21, 128, 61, 0.25);
+  border-color: #15803D;
+}
+
+/* Printing styles for delivery challans & reports */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+}
