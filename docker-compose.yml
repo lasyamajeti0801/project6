@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: stockpilot-web
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=stockpilot.settings
+      - DEBUG=0
+      - SECRET_KEY=stockpilot-enterprise-prod-secret-key-in-production
+      - DATABASE_URL=postgres://stockpilot_user:stockpilot_pass@db:5432/stockpilot_db
+      - REDIS_URL=redis://redis:6379/1
+    depends_on:
+      - db
+      - redis
+
+  frontend:
+    image: node:20-alpine
+    container_name: stockpilot-frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "5173:5173"
+    command: npm run dev -- --host 0.0.0.0 --port 5173
+
+  db:
+    image: postgres:15-alpine
+    container_name: stockpilot-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=stockpilot_db
+      - POSTGRES_USER=stockpilot_user
+      - POSTGRES_PASSWORD=stockpilot_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    container_name: stockpilot-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:

@@ -1,0 +1,27 @@
+{
+  "name": "stockpilot",
+  "version": "1.0.0",
+  "description": "StockPilot — Intelligent Warehouse & Inventory Management System",
+  "private": true,
+  "main": "main.py",
+  "scripts": {
+    "start": "python main.py",
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "lint": "npm --prefix frontend run lint",
+    "test": "pytest --cov=backend tests/",
+    "backend:dev": "python backend/manage.py runserver 0.0.0.0:8000",
+    "backend:migrate": "python backend/manage.py migrate",
+    "backend:test": "python -m pytest tests/"
+  },
+  "keywords": [
+    "warehouse-management",
+    "inventory-system",
+    "supply-chain",
+    "gst-compliance",
+    "demand-forecasting",
+    "erp"
+  ],
+  "author": "StockPilot Engineering Team",
+  "license": "MIT"
+}
