@@ -13,7 +13,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 OUTPUT_ZIP = BASE_DIR / "StockPilot_Submission_With_Git.zip"
 
 EXCLUDE_DIRS = {
-    'node_modules', 'dist', '__pycache__', '.pytest_cache', 'coverage_html', 'scratch'
+    'node_modules', 'dist', '__pycache__', '.pytest_cache', 'coverage_html', 'scratch',
+    'venv', '.venv'
 }
 
 print(f"[StockPilot] Packaging workspace into {OUTPUT_ZIP.name} (including .git history)...")
@@ -28,7 +29,12 @@ with zipfile.ZipFile(OUTPUT_ZIP, 'w', zipfile.ZIP_DEFLATED) as zf:
 
         for file in files:
             # Skip output zip itself and temp caches
-            if file == OUTPUT_ZIP.name or file.endswith('.pyc') or file.endswith('.sqlite3-journal'):
+            if (
+                file == OUTPUT_ZIP.name
+                or file.endswith('.zip')
+                or file.endswith('.pyc')
+                or file.endswith('.sqlite3-journal')
+            ):
                 continue
 
             file_path = Path(root) / file
