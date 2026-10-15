@@ -4,7 +4,7 @@
 # ==============================================================================
 
 # Core Django & REST Framework
-Django>=5.2.0,<6.0.0
+Django>=6.1.2,<7.0.0
 djangorestframework>=3.18.0
 django-cors-headers>=4.9.0
 django-filter>=26.1.0
