@@ -13,7 +13,7 @@ PyJWT>=2.15.0
 
 # Scientific & Demand Forecasting Engine
 pandas>=2.3.0
-numpy>=2.2.0
+numpy>=2.5.4
 
 # Document & Barcode Generation
 reportlab>=5.0.0
