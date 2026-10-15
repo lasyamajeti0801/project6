@@ -39,7 +39,7 @@ jobs:
           python backend/manage.py verify_data_integrity --json
 
       - name: Upload Test Coverage Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: coverage-report
