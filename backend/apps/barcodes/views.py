@@ -135,6 +135,7 @@ class BarcodeGenerateView(APIView):
             b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
             return Response({'data_url': f"data:image/png;base64,{b64}", 'text': text, 'type': 'qr'})
         else:
+<<<<<<< HEAD
             # Code 128
             if not REPORTLAB_AVAILABLE:
                 return Response({'error': 'ReportLab library is required for Code 128 rendering.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
@@ -146,7 +147,41 @@ class BarcodeGenerateView(APIView):
             d.add(bc)
             renderPM.drawToFile(d, drawing_buffer, fmt='PNG')
             b64 = base64.b64encode(drawing_buffer.getvalue()).decode('utf-8')
+=======
+            # Code 128 (Rendered via Pillow for 100% cross-platform compatibility)
+            import string
+            from PIL import Image, ImageDraw
+            bc = code128.Code128(text)
+            bc.validate()
+            bc.encode()
+            pat = bc.decompose()
+
+            oa, oA = ord('a') - 1, ord('A') - 1
+            bw = 2
+            w_units = sum((ord(c) - oa) if c in string.ascii_lowercase else (ord(c) - oA) for c in pat)
+            total_w = w_units * bw + 40
+            h = 60
+
+            img = Image.new('RGB', (total_w, h), 'white')
+            draw = ImageDraw.Draw(img)
+            x = 20
+
+            for c in pat:
+                oc = ord(c)
+                if c in string.ascii_lowercase:
+                    x += (oc - oa) * bw
+                elif c in string.ascii_uppercase:
+                    w = (oc - oA) * bw
+                    draw.rectangle([x, 6, x + w - 1, 50], fill='#14532D')
+                    x += w
+
+            buf = io.BytesIO()
+            img.save(buf, format='PNG')
+            b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+>>>>>>> f3be7b816e4c0e43c214fad19fa177ffeadc8218
             return Response({'data_url': f"data:image/png;base64,{b64}", 'text': text, 'type': 'code128'})
+
+
 
 class PrintLabelsPDFView(APIView):
     permission_classes = [permissions.IsAuthenticated]

@@ -229,3 +229,24 @@ class StockAdjustmentView(APIView):
             'stock_item': StockItemSerializer(stock_item).data,
             'movement': StockMovementSerializer(movement).data
         })
+
+
+class StockReplenishmentView(APIView):
+    """
+    API endpoint returning multi-warehouse stock replenishment recommendations,
+    EOQ calculations, and stockout risk assessments.
+    Supports ?notify=true to automatically generate in-app alert notifications.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        from .replenishment_engine import run_replenishment_audit
+
+        user = request.user
+        if not user.organization:
+            return Response({'error': 'User does not belong to an organization'}, status=status.HTTP_400_BAD_REQUEST)
+
+        dispatch_notif = request.query_params.get('notify', 'false').lower() in ('true', '1', 'yes')
+        report = run_replenishment_audit(user.organization, dispatch_notifications=dispatch_notif)
+        return Response(report, status=status.HTTP_200_OK)
+

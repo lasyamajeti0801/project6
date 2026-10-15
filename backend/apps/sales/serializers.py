@@ -1,11 +1,29 @@
 from rest_framework import serializers
 from .models import Customer, SalesOrder, SalesOrderItem
 from apps.common.utils import generate_code
+from apps.common.statutory_validators import validate_gstin, validate_pincode
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = '__all__'
+
+    def validate_gstin(self, value):
+        if value:
+            valid, err = validate_gstin(value)
+            if not valid:
+                raise serializers.ValidationError(err)
+            return value.strip().upper()
+        return value
+
+    def validate_postal_code(self, value):
+        if value:
+            valid, err = validate_pincode(value)
+            if not valid:
+                raise serializers.ValidationError(err)
+            return value.strip()
+        return value
+
 
 class SalesOrderItemSerializer(serializers.ModelSerializer):
     product_name = serializers.CharField(source='product.name', read_only=True)
