@@ -1,2 +1,3 @@
 # StockPilot Root Requirements Loader
 -r backend/requirements.txt
+
