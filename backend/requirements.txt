@@ -19,7 +19,7 @@ numpy>=2.2.0
 reportlab>=5.0.0
 qrcode[pil]>=8.2.0
 python-barcode>=0.16.0
-Pillow>=12.0.0
+Pillow>=12.3.0
 
 # Database & System Utilities
 sqlparse>=0.6.0
