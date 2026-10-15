@@ -135,20 +135,9 @@ class BarcodeGenerateView(APIView):
             b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
             return Response({'data_url': f"data:image/png;base64,{b64}", 'text': text, 'type': 'qr'})
         else:
-<<<<<<< HEAD
-            # Code 128
+            # Code 128 (Rendered via Pillow for 100% cross-platform compatibility)
             if not REPORTLAB_AVAILABLE:
                 return Response({'error': 'ReportLab library is required for Code 128 rendering.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
-            bc = code128.Code128(text, barWidth=1.5, barHeight=45, humanReadable=True)
-            drawing_buffer = io.BytesIO()
-            from reportlab.graphics import renderPM
-            from reportlab.graphics.shapes import Drawing
-            d = Drawing(bc.width, bc.height)
-            d.add(bc)
-            renderPM.drawToFile(d, drawing_buffer, fmt='PNG')
-            b64 = base64.b64encode(drawing_buffer.getvalue()).decode('utf-8')
-=======
-            # Code 128 (Rendered via Pillow for 100% cross-platform compatibility)
             import string
             from PIL import Image, ImageDraw
             bc = code128.Code128(text)
@@ -178,7 +167,6 @@ class BarcodeGenerateView(APIView):
             buf = io.BytesIO()
             img.save(buf, format='PNG')
             b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
->>>>>>> f3be7b816e4c0e43c214fad19fa177ffeadc8218
             return Response({'data_url': f"data:image/png;base64,{b64}", 'text': text, 'type': 'code128'})
 
 
