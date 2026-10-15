@@ -1,6 +1,11 @@
 import io
 import base64
-import qrcode
+try:
+    import qrcode
+    QRCODE_AVAILABLE = True
+except ImportError:
+    QRCODE_AVAILABLE = False
+
 from rest_framework.views import APIView
 from rest_framework import permissions, status
 from rest_framework.response import Response
@@ -16,11 +21,16 @@ from apps.dispatch.models import DispatchOrder
 from apps.dispatch.serializers import DispatchOrderSerializer
 from apps.common.utils import format_inr
 
-from reportlab.lib.pagesizes import A4
-from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.graphics.barcode import code128
+try:
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib import colors
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.graphics.barcode import code128
+    REPORTLAB_AVAILABLE = True
+except ImportError:
+    REPORTLAB_AVAILABLE = False
+
 
 class BarcodeLookupView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -114,6 +124,8 @@ class BarcodeGenerateView(APIView):
         barcode_type = request.query_params.get('type', 'code128')
 
         if barcode_type == 'qr':
+            if not QRCODE_AVAILABLE:
+                return Response({'error': 'qrcode library is required for QR code generation.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
             qr = qrcode.QRCode(box_size=6, border=1)
             qr.add_data(text)
             qr.make(fit=True)
@@ -124,6 +136,8 @@ class BarcodeGenerateView(APIView):
             return Response({'data_url': f"data:image/png;base64,{b64}", 'text': text, 'type': 'qr'})
         else:
             # Code 128
+            if not REPORTLAB_AVAILABLE:
+                return Response({'error': 'ReportLab library is required for Code 128 rendering.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
             bc = code128.Code128(text, barWidth=1.5, barHeight=45, humanReadable=True)
             drawing_buffer = io.BytesIO()
             from reportlab.graphics import renderPM
@@ -138,6 +152,8 @@ class PrintLabelsPDFView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
+        if not REPORTLAB_AVAILABLE or not QRCODE_AVAILABLE:
+            return Response({'error': 'ReportLab and qrcode libraries are required for PDF label printing.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
         product_id = request.query_params.get('product')
         count = min(int(request.query_params.get('count', 12)), 48)
 

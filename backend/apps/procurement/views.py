@@ -9,10 +9,15 @@ from .models import PurchaseOrder, PurchaseOrderItem, GoodsReceiptNote, GoodsRec
 from .serializers import PurchaseOrderSerializer, GoodsReceiptNoteSerializer
 from apps.inventory.models import StockItem, StockMovement
 from apps.common.utils import generate_code, format_inr
-from reportlab.lib.pagesizes import letter, A4
-from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+try:
+    from reportlab.lib.pagesizes import letter, A4
+    from reportlab.lib import colors
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    REPORTLAB_AVAILABLE = True
+except ImportError:
+    REPORTLAB_AVAILABLE = False
+
 
 class PurchaseOrderViewSet(viewsets.ModelViewSet):
     serializer_class = PurchaseOrderSerializer
@@ -77,6 +82,8 @@ class PurchaseOrderViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def download_pdf(self, request, pk=None):
+        if not REPORTLAB_AVAILABLE:
+            return Response({'error': 'ReportLab library is required for PDF generation.'}, status=status.HTTP_501_NOT_IMPLEMENTED)
         po = self.get_object()
         buffer = io.BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=36, leftMargin=36, topMargin=36, bottomMargin=36)
