@@ -1,0 +1,88 @@
+name: StockPilot CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  backend-ci:
+    name: Backend Test Suite & Code Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Backend Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+          pip install pytest pytest-django pytest-cov
+
+      - name: Validate Django Configuration & Deploy Check
+        run: |
+          python backend/manage.py check
+
+      - name: Run Pytest with Full Code Coverage
+        run: |
+          pytest tests/ --cov=backend --cov-report=xml --cov-report=term
+
+      - name: Run Enterprise Data Integrity & Ledger Audit
+        run: |
+          python backend/manage.py verify_data_integrity --json
+
+      - name: Upload Test Coverage Artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage.xml
+          retention-days: 14
+
+  frontend-ci:
+    name: Frontend Build & Typecheck
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Frontend Dependencies
+        run: npm install
+
+      - name: Verify TypeScript Compilation & Production Bundle
+        run: npm run build
+
+      - name: Run Frontend Linter
+        run: npm run lint || true
+
+  codebase-metrics:
+    name: Codebase Health & Metrics Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run Metric Measurement Script
+        run: python measure_codebase.py
